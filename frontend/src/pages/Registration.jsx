@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Register from '../components/Register'
 
 const Registration = () => {
-    return (
-        <div>
+    const initialRegisterForm = {
+        username: "",
+        email: "",
+        password: "",
+        user_img: ""
+    }
+    const [registerFormData, setRegisterFormData] = useState(initialRegisterForm)
+    const handleRegister = () => {
 
+    }
+
+    return (
+        <div className='w-full h-[40rem]  grid place-content-center place-items-center'>
+            <Register formData={registerFormData} setFormData={setRegisterFormData} handleRegister={handleRegister} />
         </div>
     )
 }

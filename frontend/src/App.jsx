@@ -4,6 +4,8 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Suspense, lazy } from 'react'
 import Spinner from './utils/Spinner'
+import Navbar from './components/Navbar'
+const Fav = lazy(() => import("./pages/Fav"))
 const Home = lazy(() => import("./pages/Home"))
 const Registration = lazy(() => import("./pages/Registration"))
 const Detail = lazy(() => import("./pages/Detail"))
@@ -15,10 +17,12 @@ function App() {
   return (
     <Suspense fallback={<Spinner />}>
       <Router>
+        <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/detail/:id' element={<Detail />} />
           <Route path='/registration' element={<Registration />} />
+          <Route path='/fav' element={<Fav />} />
           <Route path='/*' element={<ErrorPage />} />
         </Routes>
         <ToastContainer transition={1200} position='top-left' />
