@@ -1,11 +1,13 @@
 import React from 'react'
 import Input from './Input'
+import { Link } from 'react-router-dom'
 
-const Register = ({ formData, setFormData, handleRegister }) => {
+const Register = ({ setIsLogin, formData, setFormData, handleRegister }) => {
     const controls = [
         {
             name: "user_img",
             type: "file",
+            label: "User"
         },
         {
             name: "username",
@@ -30,9 +32,12 @@ const Register = ({ formData, setFormData, handleRegister }) => {
 
     return (
         <div className='border  rounded-md p-4 border-yellow-500 h-auto w-auto '>
-            <p>Register</p>
+            <p className='text-white font-thin text-2xl'>Register</p>
             <Input controls={controls} formData={formData} setFormData={setFormData} />
-            <button className='bg-gray-50  transition-all hover:bg-transparent border-[1px] hover:text-white hover:scale-110 mx-2 px-2 rounded-md'>Register</button>
+            <div className="flex flex-col md:flex-row items-center gap-2 justify-between w-full">
+                <button onClick={handleRegister} className='bg-gray-50  transition-all hover:bg-transparent border-[1px] hover:text-white hover:scale-110 mx-2 px-2 rounded-md'>Register</button>
+                <button onClick={() => setIsLogin(true)} className='text-white' to={"/login"}>Already have an account</button>
+            </div>
 
         </div>
     )

@@ -3,7 +3,7 @@ import { IoIosHeart } from "react-icons/io";
 
 const Card = ({ title, poster, id, handleAddtoFav, isFav }) => {
   return (
-    <div className=' hover:outline  mt-4 hover:outline-yellow-600 w-60 h-80 rounded-md p-2  hover:border-none transition-all hover:scale-110 '>
+    <div className=' hover:outline  mt-4 hover:outline-yellow-600 w-60 h-80 rounded-md p-0 md:p-2  hover:border-none transition-all hover:scale-110 '>
       <div className="flex flex-col  gap-2 items-center ">
         <Link to={`/detail/${id}`}>
           <div className="w-full h-60 overflow-hidden object-center rounded-md">

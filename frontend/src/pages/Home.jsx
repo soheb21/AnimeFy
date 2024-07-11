@@ -33,7 +33,7 @@ const Home = () => {
   }
   console.log(data.results)
   return (
-    <div className='h-full w-full  border overflow-hidden sm:p-2 md:p-4 bg-black text-white'>
+    <div className='h-full w-full  border overflow-hidden  md:p-4 bg-black text-white'>
       <Header />
       <div className="flex flex-wrap gap-3 justify-center items-center " >
         {
