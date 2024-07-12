@@ -1,10 +1,13 @@
 
 import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import Spinner from './utils/Spinner'
 import Navbar from './components/Navbar'
+import { useDispatch } from 'react-redux'
+import { getUser } from './store/user/userSlice'
 
 const AddAnimeForm = lazy(() => import("./pages/Admin/AddAnimeForm"))
 const Dashbaord = lazy(() => import("./pages/Admin/Dashbaord"))
@@ -16,6 +19,11 @@ const ErrorPage = lazy(() => import("./pages/ErrorPage"))
 
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUser());
+  }, [])
+
   return (
     <Suspense fallback={<Spinner />}>
       <Router>
@@ -29,7 +37,7 @@ function App() {
           <Route path='/dashboard' element={<Dashbaord />} />
           <Route path='/*' element={<ErrorPage />} />
         </Routes>
-        <ToastContainer transition={1200} position='top-left' />
+        <ToastContainer transition={1200} position='top-right' theme='dark' />
       </Router>
     </Suspense>
 

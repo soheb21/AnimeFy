@@ -1,13 +1,28 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from '../../components/Input'
+import { CgProfile } from 'react-icons/cg'
 
 const AddAnimeForm = () => {
+    const intitailAnimeForm = {
+        poster_path: "",
+        title: "",
+        genre: "",
+        release_date: "",
+        type: "",
+        seasons: "",
+        yt_trailer: "",
+        des: ""
 
+
+    }
+    const [preview, setPreview] = useState()
+
+    const [addAnimeForm, setAddAnimeForm] = useState(intitailAnimeForm)
     const controls = [
         {
             name: "poster_path",
             type: "file",
-            label: "Anime Poster"
+            label: addAnimeForm.poster_path && <img className='bg-red-400 rounded-sm overflow-hidden w-[150px] h-[200px] object-cover mb-2' src={preview} alt="img" />
         },
         {
             name: "title",
@@ -54,23 +69,20 @@ const AddAnimeForm = () => {
         },
 
     ]
-    const intitailAnimeForm = {
-        poster_path: "",
-        title: "",
-        genre: "",
-        release_date: "",
-        type: "",
-        seasons: "",
-        yt_trailer: "",
-        des: ""
 
 
-    }
-    const [addAnimeForm, setAddAnimeForm] = useState(intitailAnimeForm)
     const handleHandleForm = () => {
+        console.log(addAnimeForm)
 
     }
-    console.log(addAnimeForm)
+    useEffect(() => {
+        // create the preview
+        let selectedFile = addAnimeForm?.poster_path
+        const objectUrl = selectedFile ? URL.createObjectURL(selectedFile) : "./pofile.jpg"
+        setPreview(objectUrl)
+        // free memory when ever this component is unmounted
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [addAnimeForm.poster_path])
 
     return (
         <div className="md:w-1/2 md:mx-auto p-4 mt-4">
