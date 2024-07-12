@@ -1,7 +1,8 @@
-import userModel from "../model/userModel";
-import { generateToken } from "../utils/generateToken";
+const cloudinary = require("../helper/cloudinaryConfig");
+const userModel = require("../model/userModel");
+const { generateToken } = require("../utils/generateToken");
 
-export const register = async (req, res) => {
+exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         if (!username || !email || !password) {
@@ -17,7 +18,8 @@ export const register = async (req, res) => {
                 message: "User Already Present"
             })
         }
-        const user = await userModel.craete({ username, email, password });
+        const upload = await cloudinary.uploader.upload(req.file.path, { folder: "ANIMEFY" })
+        const user = await userModel.create({ username, email, password, user_img: upload.secure_url });
         generateToken(user, "User Register Successfully", 201, res)
     } catch (e) {
         console.log("register err", e)
@@ -27,7 +29,7 @@ export const register = async (req, res) => {
         })
     }
 }
-export const login = async (req, res) => {
+exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -54,7 +56,7 @@ export const login = async (req, res) => {
         })
     }
 }
-export const logout = async (req, res) => {
+exports.logout = async (req, res) => {
     res.status(201).cookie("token", "", {
         expires: new Date(Date.now()),
         httpOnly: true
@@ -63,7 +65,7 @@ export const logout = async (req, res) => {
         message: "Log-Out Successfull"
     })
 }
-export const checkUser = async (req, res) => {
+exports.checkUser = async (req, res) => {
     try {
         const user = await userModel.findById(req.user.id)
         return res.status(201).json({

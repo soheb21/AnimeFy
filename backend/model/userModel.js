@@ -15,7 +15,11 @@ const userSchema = new mongoose.Schema({
         required: [true, "Password required"]
     },
     fav: [],
-    user_img: String
+    user_img: String,
+    role: {
+        type: String,
+        default: "user"
+    }
 
 })
 //Before Save Hashed the passsword
@@ -25,13 +29,13 @@ userSchema.pre("save", async function (next) {
 })
 
 //compare password with Hash Password
-userSchema.methods.compareHashPassword = async (enteredPassword) => {
+userSchema.methods.compareHashPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password)
 }
 
 //Generating Token
 userSchema.methods.generatingJWT = function () {
-    return jwt.sign({ id: this, _id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_Expired })
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_Expired })
 }
 
 const userModel = new mongoose.model("user", userSchema);

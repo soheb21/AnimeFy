@@ -2,4 +2,8 @@ node_modules
 dist
 dist-ssr
 config
+config.env
+.env
 *.local
+*config.env
+backend/config

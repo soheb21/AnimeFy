@@ -4,10 +4,12 @@ const app = express();
 const cors = require("cors");
 const { connectDB } = require("./Db/connectDB");
 const { isAuthenticate } = require("./middleware/isAuth");
+const cookieParser = require('cookie-parser')
 
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
 app.use(cors())
 
 
