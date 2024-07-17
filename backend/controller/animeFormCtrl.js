@@ -1,6 +1,5 @@
 const cloudinary = require("../helper/cloudinaryConfig");
 const animeFormModel = require("../model/animeFormModel");
-const userModel = require("../model/userModel");
 
 exports.getAllAnime = async (req, res) => {
     try {
@@ -41,6 +40,7 @@ exports.craeteAnime = async (req, res) => {
 exports.updateAnime = async (req, res) => {
     try {
         const { id } = req.params;
+
         const doc = await animeFormModel.findByIdAndUpdate(id, req.body, { new: true })
         res.status(201).json({ success: true, message: "Anime is Updated Successfully", doc })
 
@@ -54,7 +54,7 @@ exports.deleteAnime = async (req, res) => {
     try {
         const { id } = req.params;
         await animeFormModel.findByIdAndDelete(id)
-        res.status(201).json({ success: true, message: "Anime is deletd Successfully", deleteID: id })
+        res.status(201).json({ success: true, message: "Anime is deletd Successfully", id })
     } catch (error) {
         console.log("delete Anime error", error)
 
@@ -62,31 +62,3 @@ exports.deleteAnime = async (req, res) => {
     }
 }
 
-exports.AddToFav = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const doc = await animeFormModel.findById({ _id: id })
-        const user = await userModel.findById(req.user.id);
-
-        user.fav.push(doc);
-        await user.save();
-        res.status(201).json({ success: true, message: "Add to Favourite", user })
-
-    } catch (error) {
-        console.log("Favourite Anime error", error)
-        res.status(500).json({ success: false, error: 'Internal Server Error' })
-    }
-}
-exports.getAllFavByUSer = async (req, res) => {
-    try {
-        const { id } = req.user;
-        const docs = await userModel.findById(id);
-        res.status(201).json(({
-            success: false,
-            doc: docs.fav
-        }))
-    } catch (error) {
-        console.log("Get All Favourite Anime error", error)
-        res.status(500).json({ success: false, error: 'Internal Server Error' })
-    }
-}

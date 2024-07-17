@@ -1,7 +1,5 @@
 const cloudinary = require("../helper/cloudinaryConfig");
 const userModel = require("../model/userModel");
-const { generateToken } = require("../utils/generateToken");
-
 exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -13,17 +11,22 @@ exports.register = async (req, res) => {
         }
         const existingUser = await userModel.findOne({ email }).select("+password")
         if (existingUser) {
-            res.status(402).json({
+            return res.status(402).json({
                 success: false,
                 message: "User Already Present"
             })
         }
         const upload = await cloudinary.uploader.upload(req.file.path, { folder: "ANIMEFY" })
         const user = await userModel.create({ username, email, password, user_img: upload.secure_url });
-        generateToken(user, "User Register Successfully", 201, res)
+        const token = user.generatingJWT();
+        return res.status(201).json({
+            success: true,
+            message: "Register Successfully",
+            token
+        })
     } catch (e) {
         console.log("register err", e)
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: 'Internal Server Error',
         })
@@ -38,16 +41,26 @@ exports.login = async (req, res) => {
                 message: 'Provide Email and Password',
             })
         }
-        const user = await userModel.findOne({ email }).select("+password")
-
-        const isMatch = await user.compareHashPassword(password);
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: 'user not found!',
+            })
+        }
+        const isMatch = await user.compareHashPassword(password)
         if (!isMatch) {
             return res.status(401).json({
                 success: false,
                 message: 'Password is wrong',
             })
         }
-        generateToken(user, "User Login Successfully", 201, res)
+        const token = user.generatingJWT();
+        res.status(201).json({
+            success: true,
+            message: "Login Successfully",
+            token
+        })
     } catch (e) {
         console.log("Login err", e)
         res.status(500).json({
@@ -67,10 +80,10 @@ exports.logout = async (req, res) => {
 }
 exports.checkUser = async (req, res) => {
     try {
-        const user = await userModel.findById(req.user.id)
+        const doc = await userModel.findById(req.user)
         return res.status(201).json({
             success: true,
-            user
+            doc
         })
     } catch (e) {
         console.log("user err", e)
@@ -78,5 +91,31 @@ exports.checkUser = async (req, res) => {
             success: false,
             message: 'Internal Server Error',
         })
+    }
+}
+exports.getAllUser = async (req, res) => {
+    try {
+        const doc = await userModel.find({ role: "user" });
+        return res.status(201).json({
+            success: true,
+            doc
+        })
+    } catch (e) {
+        console.log("getAllUser err", e)
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+        })
+    }
+}
+exports.deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await userModel.findByIdAndDelete(id)
+        res.status(201).json({ success: true, message: "user is deleted Successfully", id })
+    } catch (error) {
+        console.log("delete Anime error", error)
+
+        res.status(500).json({ success: false, error: 'Internal Server Error' })
     }
 }

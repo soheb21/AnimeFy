@@ -25,11 +25,12 @@ const animeFormSchema = new mongoose.Schema({
         type: String,
         required: [true, "genre Required"]
     },
+    
     des: {
         type: String,
         required: [true, "Description Required"]
     },
-    
+
     poster_path: String
 
 })

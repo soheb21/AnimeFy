@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import Register from '../components/Register'
 import Login from '../components/Login'
 import { useDispatch, useSelector } from "react-redux"
-import { clearAllErrorsFun, login, register } from '../store/user/userSlice'
-import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import Spinner from '../utils/Spinner'
+import { loginAsync, registerAsync } from '../store/user/userAPI'
+import { clearAllErrors } from '../store/user/userSlice'
+import { toast } from 'react-toastify'
 
 const Registration = () => {
     const initialRegisterForm = {
@@ -22,7 +23,7 @@ const Registration = () => {
     const [loginData, setLoginData] = useState(initialLoginForm)
     const [isLogin, setIsLogin] = useState(false)
     const dispatch = useDispatch();
-    const { loading, user, error, isAuthenticate } = useSelector(state => state.user)
+    const { error, loading } = useSelector(state => state.user)
     const navigate = useNavigate();
     const handleRegister = (e) => {
         e.preventDefault();
@@ -31,27 +32,27 @@ const Registration = () => {
         form.append("email", registerFormData.email)
         form.append("password", registerFormData.password)
         form.append("username", registerFormData.username)
-        dispatch(register(form))
-        setRegisterFormData(initialRegisterForm)
-    }
-    const handleLogin = (e) => {
-        e.preventDefault();
-        dispatch(login(loginData));
-        setLoginData(initialLoginForm)
-    }
-    useEffect(() => {
         if (error) {
-            toast.error(error);
-            dispatch(clearAllErrorsFun());
-        }
-        if (isAuthenticate) {
+            alert(error)
+            clearAllErrors();
+            return
+        } else {
+            dispatch(registerAsync(form))
+            setRegisterFormData(initialRegisterForm)
             navigate("/")
         }
 
-    }, [dispatch, loading, error, isAuthenticate])
-    if (loading) {
-        return <Spinner />
     }
+    const handleLogin = (e) => {
+        e.preventDefault();
+        dispatch(loginAsync(loginData));
+        setLoginData(initialLoginForm)
+        navigate("/")
+
+
+    }
+
+
     return (
         <div className='w-full h-[40rem]  grid place-content-center place-items-center'>
 

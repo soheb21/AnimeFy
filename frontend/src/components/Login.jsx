@@ -1,6 +1,7 @@
 import React from 'react'
 import Input from './Input'
 
+
 const Login = ({ setIsLogin, formData, setFormData, handleLogin }) => {
     const controls = [
         {
@@ -17,6 +18,7 @@ const Login = ({ setIsLogin, formData, setFormData, handleLogin }) => {
         },
 
     ]
+
 
 
     return (

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createSlice } from "@reduxjs/toolkit"
+import { getUserAsync, loginAsync, logoutAsync, registerAsync } from "./userAPI";
 
 const initialState = {
     loading: false,
@@ -12,134 +13,63 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        loginRequest(state, action) {
-            state.loading = true,
-                state.user = {},
-                state.isAuthenticate = false,
-                state.error = null
-        },
-        loginSuccess(state, { payload }) {
-            state.loading = false;
-            state.message = payload.message;
-            state.isAuthenticate = true;
+        clearAllErrors(state) {
             state.error = null;
-        },
-        loginFailed(state, { payload }) {
-            state.loading = false;
             state.user = {};
-            state.error = payload.message;
-            state.isAuthenticate = false;
-        },
-        registerRequest(state, action) {
-            state.loading = true,
-                state.user = {},
-                state.isAuthenticate = false,
-                state.error = null
-        },
-        registerSuccess(state, action) {
             state.loading = false;
-            state.message = action.payload.message;
+            state.message = null;
+        },
+        logout(state) {
+            localStorage.clear();
+            state.loading = false;
+            state.isAuthenticate = false;
+            state.user = {};
+            state.message = payload.message
+        }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(registerAsync.pending, (state, { payload }) => {
+            state.loading = true;
+        })
+        builder.addCase(registerAsync.fulfilled, (state, { payload }) => {
+            state.loading = false;
             state.isAuthenticate = true;
-            state.error = null;
-        },
-        registerFailed(state, { payload }) {
+            state.message = payload.message
+        })
+        builder.addCase(registerAsync.rejected, (state, { payload }) => {
             state.loading = false;
-            state.user = {};
-            state.error = payload.message;
             state.isAuthenticate = false;
-        },
-        userRequest(state, action) {
-            state.loading = true,
-                state.user = {},
-                state.isAuthenticate = false,
-                state.error = null
-        },
-        userSuccess(state, { payload }) {
+            state.error = payload
+        })
+        builder.addCase(loginAsync.pending, (state, { payload }) => {
+            state.loading = true;
+        })
+        builder.addCase(loginAsync.fulfilled, (state, { payload }) => {
             state.loading = false;
+            state.isAuthenticate = true;
+            state.message = payload.message
+        })
+        builder.addCase(loginAsync.rejected, (state, { payload }) => {
+            state.loading = false;
+            state.isAuthenticate = state.isAuthenticate;
+            state.error = payload
+        })
+        builder.addCase(getUserAsync.pending, (state, { payload }) => {
+            state.loading = true;
+        })
+        builder.addCase(getUserAsync.fulfilled, (state, { payload }) => {
+            state.loading = false;
+            state.isAuthenticate = true;
             state.user = payload.doc;
-            state.isAuthenticate = true;
-            state.error = null;
-        },
-        userFailed(state, { payload }) {
-            state.loading = false;
-            state.user = {};
-            state.error = payload.message;
-            state.isAuthenticate = false;
-        },
-        logoutSuccess(state, { payload }) {
-            state.loading = false;
-            state.user = {};
-            state.isAuthenticate = false;
-            state.error = null;
             state.message = payload.message
 
-        },
-        logoutFailed(state, { payload }) {
+        })
+        builder.addCase(getUserAsync.rejected, (state, { payload }) => {
             state.loading = false;
-            state.user = state.user;
             state.isAuthenticate = state.isAuthenticate;
-            state.error = payload.message;
-
-        },
-        clearAllErrors(state, action) {
-            state.error = null;
-            state.user = state.user;
-        }
+            state.error = payload
+        })
     }
 })
-export const clearAllErrorsFun = () => (dispatch) => {
-    dispatch(userSlice.actions.clearAllErrors())
-
-}
-export const login = (formData) => async (dispatch) => {
-    dispatch(userSlice.actions.loginRequest())
-    try {
-        const { data } = await axios.post("http://localhost:8000/api/v1/user/login", formData)
-        dispatch(userSlice.actions.loginSuccess(data.doc))
-        dispatch(userSlice.actions.clearAllErrors())
-
-    } catch (e) {
-        dispatch(userSlice.actions.loginFailed(e.response.data.message))
-
-    }
-
-}
-export const register = (formData) => async (dispatch) => {
-    dispatch(userSlice.actions.registerRequest());
-    try {
-        const { data } = await axios.post("http://localhost:8000/api/v1/user/register", formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        })
-        dispatch(userSlice.actions.registerSuccess(data));
-        dispatch(userSlice.actions.clearAllErrors());
-
-    } catch (e) {
-        dispatch(userSlice.actions.registerFailed(e.response.data.message))
-    }
-}
-
-export const getUser = () => async (dispatch) => {
-    dispatch(userSlice.actions.userRequest());
-    try {
-        const { data } = await axios.get("http://localhost:8000/api/v1/user/getuser")
-        dispatch(userSlice.actions.userSuccess(data));
-        dispatch(userSlice.actions.clearAllErrors());
-
-    } catch (e) {
-        dispatch(userSlice.actions.userFailed(e.response.data.message))
-    }
-}
-export const logout = () => async (dispatch) => {
-    try {
-        const { data } = await axios.get("http://localhost:8000/api/v1/user/logout")
-        dispatch(userSlice.actions.loginSuccess(data))
-        dispatch(userSlice.actions.clearAllErrors())
-
-    } catch (e) {
-        dispatch(userSlice.actions.logoutFailed(e.response.data.message))
-
-    }
-}
+export const { clearAllErrors, logout } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaUsers } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteUserAsync, getAllUserAsync } from '../../store/anime/adminAPI';
+import Spinner from '../../utils/Spinner';
+import { toast } from 'react-toastify';
+import { clearAllErrors } from '../../store/anime/animSlice';
 const Dashboard = () => {
     const data = [
         { id: 1, name: 'John Doe', email: 'john@example.com', userID: '6767gssgfksaksdj' },
@@ -8,7 +13,25 @@ const Dashboard = () => {
 
         // Add more data as needed
     ];
+    const dispatch = useDispatch();
+    const { allUser, error, loading } = useSelector((state) => state.anime)
 
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
+            clearAllErrors();
+        }
+        dispatch(getAllUserAsync());
+    }, [])
+    if (loading) {
+        return <Spinner />
+    }
+    const handleRemoveUser = (id) => {
+        if (!id) {
+            return toast.error("User Not Found!")
+        }
+        return dispatch(deleteUserAsync(id))
+    }
     return (
         <div className="container mx-auto px-4 sm:px-8 max-w-3xl">
             <div className="py-8">
@@ -47,19 +70,19 @@ const Dashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map((item) => (
-                                    <tr key={item.id}>
+                                {allUser?.map((item) => (
+                                    <tr key={item._id}>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p className="text-black bg-gray-50 whitespace-no-wrap">{item.name}</p>
+                                            <p className="text-black uppercase bg-gray-50 whitespace-no-wrap">{item?.username}</p>
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p className="text-black bg-gray-50 whitespace-no-wrap">{item.email}</p>
+                                            <p className="text-black bg-gray-50 whitespace-no-wrap">{item?.email}</p>
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p className="text-black bg-gray-50 whitespace-no-wrap">{item.userID}</p>
+                                            <p className="text-black bg-gray-50 whitespace-no-wrap">{item?._id}</p>
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <button className=" transition-all hover:scale-110 text-center w-full  md:text-xl whitespace-no-wrap"><FaTrash className='bg-slate-50 text-red-500' /></button>
+                                            <button onClick={() => handleRemoveUser(item._id)} className=" transition-all hover:scale-110 text-center w-full  md:text-xl whitespace-no-wrap"><FaTrash className='bg-slate-50 text-red-500' /></button>
                                         </td>
                                     </tr>
                                 ))}
