@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import Input from './Input'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { CgProfile } from "react-icons/cg";
+import { clearAllUserErrors } from '../store/user/userSlice';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerAsync } from '../store/user/userAPI';
 
 
-const Register = ({ setIsLogin, formData, setFormData, handleRegister }) => {
+const Register = () => {
     const [preview, setPreview] = useState()
+    const navigate = useNavigate();
+    const initialRegisterForm = {
+        username: "",
+        email: "",
+        password: "",
+        user_img: ""
+    }
+    const [registerFormData, setRegisterFormData] = useState(initialRegisterForm)
     const controls = [
         {
             name: "user_img",
             type: "file",
-            label: formData.user_img ? <img className='bg-red-400 rounded-full object-cover mb-2' height={"100px"} width={"100px"} src={preview} alt="img" /> : <CgProfile className='w-[100px] mb-2 h-[100px]' />
+            label: registerFormData.user_img ? <img className='bg-red-400 rounded-full object-cover mb-2' height={"100px"} width={"100px"} src={preview} alt="img" /> : <CgProfile className='w-[100px] mb-2 h-[100px]' />
         },
         {
             name: "username",
@@ -34,24 +46,48 @@ const Register = ({ setIsLogin, formData, setFormData, handleRegister }) => {
     ]
     useEffect(() => {
         // create the preview
-        let selectedFile = formData?.user_img
+        let selectedFile = registerFormData?.user_img
         const objectUrl = selectedFile ? URL.createObjectURL(selectedFile) : "./pofile.jpg"
         setPreview(objectUrl)
         // free memory when ever this component is unmounted
         return () => URL.revokeObjectURL(objectUrl)
-    }, [formData.user_img])
+    }, [registerFormData.user_img])
 
+    const { error } = useSelector(state => state.user)
+    const dispatch = useDispatch();
+
+    const handleRegister = (e) => {
+        e.preventDefault();
+        let form = new FormData();
+        form.append("user_img", registerFormData.user_img)
+        form.append("email", registerFormData.email)
+        form.append("password", registerFormData.password)
+        form.append("username", registerFormData.username)
+        if (!registerFormData.email || !registerFormData.password || !registerFormData.username || !registerFormData.user_img) {
+            toast.warn("Please Provide All Fields!!")
+            return;
+        }
+        if (error) {
+            toast.error(error ? error : "Something went wrong!!")
+            dispatch(clearAllUserErrors())
+        }
+        dispatch(registerAsync(form))
+        navigate("/login")
+
+
+    }
 
     return (
-        <div className='border  rounded-md p-4 border-yellow-500 h-auto w-auto '>
-            <p className='text-white font-thin text-2xl'>Register</p>
+        <div className="w-full h-[40rem]  grid place-content-center place-items-center">
+            <div className='border  rounded-md p-4 border-yellow-500 h-auto w-auto '>
+                <p className='text-white font-thin text-2xl'>Register</p>
+                <Input controls={controls} formData={registerFormData} setFormData={setRegisterFormData} />
+                <div className="flex flex-col md:flex-row items-center gap-2 justify-between w-full">
+                    <button onClick={handleRegister} className='bg-gray-50  transition-all hover:bg-transparent border-[1px] hover:text-white hover:scale-110 mx-2 px-2 rounded-md'>Register</button>
+                    <Link className='text-white' to={"/login"}>Already have an account</Link>
+                </div>
 
-            <Input controls={controls} formData={formData} setFormData={setFormData} />
-            <div className="flex flex-col md:flex-row items-center gap-2 justify-between w-full">
-                <button onClick={handleRegister} className='bg-gray-50  transition-all hover:bg-transparent border-[1px] hover:text-white hover:scale-110 mx-2 px-2 rounded-md'>Register</button>
-                <button onClick={() => setIsLogin(true)} className='text-white' to={"/login"}>Already have an account</button>
             </div>
-
         </div>
     )
 }

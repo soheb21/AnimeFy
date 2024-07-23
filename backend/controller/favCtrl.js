@@ -1,11 +1,27 @@
-const favModel = require("../model/favModel");
+const animeFormModel = require("../model/animeFormModel");
+const userModel = require("../model/userModel");
 
 exports.AddtoFav = async (req, res) => {
     try {
         let { docID } = req.body;
         const userID = req.user;
-        const doc = await favModel.create({ fav: docID, user: userID })
-        const result = await doc.populate("fav");
+        const user = await userModel.findById(userID)
+        const anime = await animeFormModel.findById(docID);
+        if (!anime) {
+            return res.status(404).json({ message: 'anime not found' });
+        }
+        // Check if the product is already in the cart
+        const cartItemIndex = user.favs.findIndex(item => item.toString() === docID);
+
+        if (cartItemIndex > -1) {
+            return res.status(404).json({ message: 'Already Present' });
+        } else {
+            // Add the Anime to the Favourite
+            user.favs.push(docID);
+        }
+
+        const result = await user.save()
+        await result.populate("favs")
         res.status(201).json({ success: true, message: "Add to Favourite", result })
 
     } catch (error) {
@@ -16,8 +32,7 @@ exports.AddtoFav = async (req, res) => {
 exports.getAllFavByUSer = async (req, res) => {
     try {
         const id = req.user;
-        const docs = await favModel.find({ user: id }).populate("fav")
-
+        const docs = await userModel.findById(id).populate('favs')
 
         res.status(201).json(({
             success: false,
@@ -31,10 +46,17 @@ exports.getAllFavByUSer = async (req, res) => {
 exports.deleteFavByUSer = async (req, res) => {
     try {
         const { id } = req.params;
-        await favModel.findByIdAndDelete(id)
-
+        const userID = req.user;
+        const user = await userModel.findById(userID)
+        const cartItemIndex = user.favs.findIndex((item) => item.toString() === id)
+        if (cartItemIndex > -1) {
+            //remove the item from the  cart
+            user.favs.splice(cartItemIndex, 1);
+            await user.save();
+        }
         res.status(201).json(({
             success: false,
+            message: "Its removed",
             id
         }))
     } catch (error) {

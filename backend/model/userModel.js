@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         required: [true, "Password required"]
     },
     user_img: String,
+    favs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'animeForm'
+    }],
     role: {
         type: String,
         default: "user"

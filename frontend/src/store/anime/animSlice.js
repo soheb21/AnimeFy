@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { addFavAsync, getAllAnimesAsync, getAnimeDetailAsync, getFavAsync, removeFavByUserAsync } from "./animeAPI";
+import {  getAllAnimesAsync, getAnimeDetailAsync } from "./animeAPI";
 import { addAnimeAsync, deleteAnimeAsync, deleteUserAsync, getAllUserAsync, updateAnimeAsync } from "./adminAPI";
 
 const initialState = {
     loading: false,
     anime: [],
     animeDetail: {},
-    favs: [],
     allUser: [],
     message: null,
     error: null,
@@ -19,7 +18,6 @@ const animeSlice = createSlice({
         clearAllErrors(state) {
             state.error = null;
             state.anime = state.anime;
-            state.favs = state.favs;
             state.animeDetail = state.animeDetail;
             state.loading = false;
             state.message = null;
@@ -54,49 +52,12 @@ const animeSlice = createSlice({
             state.loading = false;
             state.error = payload
         })
-        builder.addCase(addFavAsync.pending, (state, { payload }) => {
-            state.loading = true;
-        })
-        builder.addCase(addFavAsync.fulfilled, (state, { payload }) => {
-            state.loading = false;
-            state.message = payload.message
 
-        })
-        builder.addCase(addFavAsync.rejected, (state, { payload }) => {
-            state.loading = false;
-            state.error = payload
-        })
-        builder.addCase(getFavAsync.pending, (state, { payload }) => {
-            state.loading = true;
-        })
-        builder.addCase(getFavAsync.fulfilled, (state, { payload }) => {
-            state.loading = false;
-
-            state.favs = payload.doc;
-            state.message = payload.message
-
-        })
-        builder.addCase(getFavAsync.rejected, (state, { payload }) => {
-            state.loading = false;
-            state.error = payload
-        })
-        builder.addCase(removeFavByUserAsync.pending, (state, { payload }) => {
-            state.loading = true;
-        })
-        builder.addCase(removeFavByUserAsync.fulfilled, (state, { payload }) => {
-            state.loading = false;
-            state.message = payload.message;
-            let newList = state.favs.filter((i) => i._id !== payload.id);
-            state.favs = newList;
-        })
-        builder.addCase(removeFavByUserAsync.rejected, (state, { payload }) => {
-            state.loading = false;
-            state.error = payload
-        })
         builder.addCase(addAnimeAsync.pending, (state, { payload }) => {
             state.loading = true;
         })
         builder.addCase(addAnimeAsync.fulfilled, (state, { payload }) => {
+            console.log("add", payload)
             state.loading = false;
             state.message = payload.message
 

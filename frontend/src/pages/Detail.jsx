@@ -22,16 +22,6 @@ const Detail = () => {
     if (loading) {
         return <Spinner />
     }
-
-    const data = {
-        title: "Despicable Me ",
-        yt_trailer: "2g811Eo7K8U",
-        genre: ["Comedy", "Action", "Fantasy"],
-        des: "Gru and Lucy and their girls — Margo, Edith and Agnes — welcome a new member to the Gru family, Gru Jr., who is intent on tormenting his dad. Meanwhile, Gru faces a new nemesis in Maxime Le Mal and his femme fatale girlfriend Valentina, forcing the family to go on the run.",
-        release_date: "2024-06-20",
-        type: "series",
-        seasons: 2
-    }
     return (
         <div>
             <CardDetail data={animeDetail} />

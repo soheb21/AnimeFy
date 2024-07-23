@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
                 message: 'Provide Email and Password',
             })
         }
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ email })
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -80,7 +80,7 @@ exports.logout = async (req, res) => {
 }
 exports.checkUser = async (req, res) => {
     try {
-        const doc = await userModel.findById(req.user)
+        const doc = await userModel.findById(req.user).populate("favs");
         return res.status(201).json({
             success: true,
             doc

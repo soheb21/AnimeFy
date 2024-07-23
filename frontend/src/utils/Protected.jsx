@@ -7,7 +7,7 @@ const Protected = ({ children }) => {
 
     const { isAuthenticate } = useSelector(state => state.user)
     if (!isAuthenticate || !localStorage.getItem("token")) {
-        return <Navigate to="/registration" replace={true} />
+        return <Navigate to="/login" replace={true} />
     }
     return children;
 }
