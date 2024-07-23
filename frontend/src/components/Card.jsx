@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { IoIosHeart } from "react-icons/io";
 import { useSelector } from 'react-redux';
 
-const Card = ({ title, poster, id, isFav, removeiD, handleAddtoFav, handleDeleteAnime, handleUpdateAnime, handleremove }) => {
+const Card = ({ title, poster, id, removeiD, handleAddtoFav, handleDeleteAnime, handleUpdateAnime, handleremove }) => {
   const { user, favs } = useSelector((state) => state.user);
   const { pathname } = useLocation()
   return (

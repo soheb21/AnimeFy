@@ -97,7 +97,9 @@ const AddAnimeForm = () => {
         }
         else if (!poster_path || !title || !genre || !release_date || !type || !seasons || !yt_trailer || !des) {
             alert("Please Fill All Fields");
-        } else {
+        }
+        else {
+
             let form = new FormData();
             form.append("poster_path", addAnimeForm.poster_path)
             form.append("title", addAnimeForm.title)

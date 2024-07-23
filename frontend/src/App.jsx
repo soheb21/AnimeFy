@@ -2,7 +2,7 @@
 
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { getFavAsync, getUserAsync } from './store/user/userAPI';
@@ -29,6 +29,8 @@ function App() {
   const { error, message } = useSelector((state) => state.anime)
   const { isAuthenticate } = useSelector((state) => state.user)
   const token = localStorage.getItem("token");
+  const [filter, setFilter] = useState("")
+
   useEffect(() => {
     if (isAuthenticate || token) {
       dispatch(getUserAsync());
@@ -40,8 +42,8 @@ function App() {
       dispatch(clearAllUserErrors())
     }
 
-    dispatch(getAllAnimesAsync());
-  }, [dispatch, error, token, isAuthenticate])
+    dispatch(getAllAnimesAsync(filter));
+  }, [dispatch, filter, error, token, isAuthenticate])
 
 
 
@@ -50,7 +52,7 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path='/' element={<Home setFilter={setFilter} filter={filter} />} />
         <Route path='/detail/:id' element={<Detail />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

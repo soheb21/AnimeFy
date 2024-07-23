@@ -33,7 +33,7 @@ const CardDetail = ({ data }) => {
 
             <div className="flex flex-col gap-3 md:flex-row items-start w-full justify-between p-2">
                 <p className='font-semibold text-md md:text-xl text-yellow-600'>Type: <span className='font-semibold rounded-md bg-white text-black px-1'>{data?.type}</span></p>
-                <p className='flex gap-3 flex-wrap items-center text-yellow-600 font-semibold '>Genre:{data?.genre?.split(",").map(i => <span key={i} className='font-semibold rounded-md bg-white text-black px-1 '>{i}</span>)}</p>
+                <p className='flex gap-3 flex-wrap items-center text-yellow-600 font-semibold '>Genre:{data?.genre?.map(i => <span key={i} className='font-semibold rounded-md bg-white text-black px-1 '>{i}</span>)}</p>
             </div>
             <p className='font-semibold text-md md:text-xl text-yellow-600 px-2'>Season: <span className='font-normal rounded-md bg-white text-black px-1'>{data?.seasons}</span></p>
             <h4 className='font-semibold text-md md:text-xl text-yellow-700'>Description: <br /><p className='font-thin text-gray-200'>{data?.des}</p></h4>

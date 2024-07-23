@@ -3,7 +3,17 @@ const animeFormModel = require("../model/animeFormModel");
 
 exports.getAllAnime = async (req, res) => {
     try {
-        const doc = await animeFormModel.find({});
+        let query = {};
+        query = animeFormModel.find();
+        if (req.query.c) {
+            query = query.find({ genre: req.query.c })
+        }
+        if (req.query._order) {
+            query = query.sort({ release_date: req.query._order })
+        }
+        const doc = await query.exec();
+
+
         res.status(201).json({ success: true, doc })
     } catch (error) {
         console.log("getAllAnimebyUser error", error)
@@ -30,7 +40,8 @@ exports.craeteAnime = async (req, res) => {
             });
         }
         const upload = await cloudinary.uploader.upload(req.file.path, { folder: "ANIMEFY" })
-        const doc = await animeFormModel.create({ title, des, genre, release_date, type, seasons, yt_trailer, poster_path: upload.secure_url })
+        let allGenres = genre.split(",")
+        const doc = await animeFormModel.create({ title, des, genre: allGenres, release_date, type, seasons, yt_trailer, poster_path: upload.secure_url })
         res.status(201).json({ success: true, message: "Anime is Added Successfully", doc })
     } catch (error) {
         console.log("create Anime error", error)
@@ -40,8 +51,10 @@ exports.craeteAnime = async (req, res) => {
 exports.updateAnime = async (req, res) => {
     try {
         const { id } = req.params;
-
-        const doc = await animeFormModel.findByIdAndUpdate(id, req.body, { new: true })
+        const { title, des, genre, release_date, type, seasons, yt_trailer } = req.body;
+        let str = genre.join();
+        let allGenres = str.split(",")
+        const doc = await animeFormModel.findByIdAndUpdate(id, { title, des, genre: allGenres, release_date, type, seasons, yt_trailer }, { new: true })
         res.status(201).json({ success: true, message: "Anime is Updated Successfully", doc })
 
     } catch (error) {

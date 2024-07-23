@@ -6,7 +6,7 @@ const animeFormSchema = new mongoose.Schema({
         required: [true, "Title Required"]
     },
     genre: {
-        type: String,
+        type: [],
         required: [true, "genre Required"]
     },
     release_date: {
@@ -25,15 +25,14 @@ const animeFormSchema = new mongoose.Schema({
         type: String,
         required: [true, "genre Required"]
     },
-    
+
     des: {
         type: String,
         required: [true, "Description Required"]
     },
-
     poster_path: String
 
-})
+}, { timestamps: true })
 
 const animeFormModel = new mongoose.model("animeForm", animeFormSchema);
 

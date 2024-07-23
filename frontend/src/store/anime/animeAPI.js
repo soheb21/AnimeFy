@@ -2,9 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-export const getAllAnimesAsync = createAsyncThunk("/all-anime", async (args, { rejectWithValue }) => {
+export const getAllAnimesAsync = createAsyncThunk("/all-anime", async (filter, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get("http://localhost:8000/api/v1/anime/get")
+
+        const { data } = await axios.get(`http://localhost:8000/api/v1/anime/${filter !== "" ? `get?c=${filter}` : 'get'}`)
         return data;
 
     } catch (e) {
