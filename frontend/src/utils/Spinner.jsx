@@ -2,7 +2,7 @@ import React from 'react'
 
 const Spinner = () => {
     return (
-        <div role="status" className="flex  h-screen justify-center items-center space-x-2">
+        <div role="status" className="flex -opacity-40 dark:bg-hero-dark-pattern  h-screen justify-center items-center space-x-2">
             <svg className="h-20 w-20 animate-spin stroke-yellow-700" viewBox="0 0 256 256">
                 <line x1={128} y1={32} x2={128} y2={64} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
                 <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />

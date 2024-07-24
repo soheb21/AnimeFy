@@ -64,26 +64,28 @@ const Home = ({ setFilter, filter }) => {
         loading
           ? (<Spinner />)
           : (
-            <div className='h-full w-full   overflow-hidden  md:p-4 bg-black text-white'>
-              <Header handleChange={handleChange} query={query} setFilter={setFilter} filter={filter} />
-              <div className="flex flex-wrap gap-3 justify-center items-center " >
-                {
-                  filteredItems.length > 0 ? filteredItems?.map((item) => <Card
-                    key={item._id}
-                    poster={item?.poster_path}
-                    title={item?.title}
-                    id={item?._id}
-                    handleAddtoFav={handleAddtoFav}
-                    handleUpdateAnime={handleUpdateAnime}
-                    handleDeleteAnime={handleDeleteAnime}
+            <div className="bg-hero-pattern h-screen w-full -opacity-40 dark:bg-hero-dark-pattern fixed top-0">
+              <div className='h-full w-full   overflow-auto  md:p-4  text-white'>
+                <Header handleChange={handleChange} query={query} setFilter={setFilter} filter={filter} />
+                <div className="flex flex-wrap gap-3 justify-center items-center " >
+                  {
+                    filteredItems.length > 0 ? filteredItems?.map((item) => <Card
+                      key={item._id}
+                      poster={item?.poster_path}
+                      title={item?.title}
+                      id={item?._id}
+                      handleAddtoFav={handleAddtoFav}
+                      handleUpdateAnime={handleUpdateAnime}
+                      handleDeleteAnime={handleDeleteAnime}
 
-                  />)
-                    : <p>Not Available</p>
-                }
+                    />)
+                      : <p>Not Available</p>
+                  }
+
+                </div>
+
 
               </div>
-
-
             </div>
           )
       }

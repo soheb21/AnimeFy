@@ -147,15 +147,17 @@ const AddAnimeForm = () => {
 
 
     return (
-        <div className="md:w-1/2 md:mx-auto p-4 mt-4">
-            <div className='border  rounded-md p-4 border-yellow-500 h-auto w-auto '>
-                <p className='text-white font-thin  text-2xl'>Add{" "}<span className='font-bold text-yellow-500'>Anime</span></p>
-                <Input controls={controls} formData={addAnimeForm} setFormData={setAddAnimeForm} />
-                <div className="flex flex-col md:flex-row items-center gap-2 justify-between w-full">
-                    <button onClick={handleHandleForm} className='bg-gray-50  transition-all hover:bg-transparent border-[1px] hover:text-white hover:scale-110 mx-2 px-2 rounded-md'>{isEdit ? "Edit" : "Add"}</button>
+        <div className="bg-hero-pattern dark:bg-hero-dark-pattern  h-screen fixed top-0 w-full overflow-y-auto">
+            <div className="md:w-1/2 border border-custom-text-header  bg-hero-dark-pattern md:mx-auto p-4 mt-20">
+                <div className='  rounded-md p-4 h-auto w-auto '>
+                    <p className='text-white font-thin  text-2xl'>Add{" "}<span className='font-bold text-yellow-500'>Anime</span></p>
+                    <Input controls={controls} formData={addAnimeForm} setFormData={setAddAnimeForm} />
+                    <div className="flex flex-col md:flex-row items-center gap-2 justify-between w-full">
+                        <button onClick={handleHandleForm} className='bg-custom-bg-light text-custom-text-dark-primary   transition-all hover:bg-transparent hover:text-custom-text-primary border-custom-btn-primary-text border-[1px]   hover:scale-110 mx-2 px-2 rounded-md'>{isEdit ? "Edit" : "Add"}</button>
+                    </div>
+
+
                 </div>
-
-
             </div>
         </div>
     )

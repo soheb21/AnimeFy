@@ -23,7 +23,7 @@ const Detail = () => {
         return <Spinner />
     }
     return (
-        <div>
+        <div className='bg-hero-pattern dark:bg-hero-dark-pattern'>
             <CardDetail data={animeDetail} />
         </div>
     )

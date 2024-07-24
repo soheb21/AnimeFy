@@ -1,5 +1,3 @@
-
-
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { useEffect, useState } from 'react'
@@ -20,7 +18,6 @@ import Login from './components/Login';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { clearAllUserErrors } from './store/user/userSlice'
-
 
 
 function App() {
@@ -45,10 +42,7 @@ function App() {
     dispatch(getAllAnimesAsync(filter));
   }, [dispatch, filter, error, token, isAuthenticate])
 
-
-
   return (
-
     <Router>
       <Navbar />
       <Routes>

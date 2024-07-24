@@ -28,22 +28,24 @@ const Fav = () => {
             {
                 loading
                     ? <Spinner />
-                    : <div className='h-full bg-black text-white p-4 '>
+                    : <div className='bg-hero-pattern h-screen w-full -opacity-40 dark:bg-hero-dark-pattern fixed top-0  '>
 
-                        <div className="flex flex-wrap gap-3 justify-center items-center " >
-                            {
-                                favs.length > 0 ? favs?.map((item, ind) => <Card
-                                    key={ind}
-                                    poster={item?.poster_path}
-                                    title={item?.title}
-                                    id={item?._id}
-                                    removeiD={item?._id}
-                                    handleremove={handleremove}
+                        <div className="h-full w-full mt-20  overflow-auto  md:p-4  text-white">
+                            <div className="flex flex-wrap gap-3 justify-center items-center " >
+                                {
+                                    favs.length > 0 ? favs?.map((item, ind) => <Card
+                                        key={ind}
+                                        poster={item?.poster_path}
+                                        title={item?.title}
+                                        id={item?._id}
+                                        removeiD={item?._id}
+                                        handleremove={handleremove}
 
-                                />)
-                                    : <p className='w-full text-center text-3xl '>No Favourite Found</p>
-                            }
+                                    />)
+                                        : <p className='w-full text-center text-3xl '>No Favourite Found</p>
+                                }
 
+                            </div>
                         </div>
 
 

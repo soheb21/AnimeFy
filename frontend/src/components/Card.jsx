@@ -6,7 +6,7 @@ const Card = ({ title, poster, id, removeiD, handleAddtoFav, handleDeleteAnime, 
   const { user, favs } = useSelector((state) => state.user);
   const { pathname } = useLocation()
   return (
-    <div className=' hover:outline  my-4 hover:outline-yellow-600 w-60 h-80 shadow-sm shadow-lime-100 rounded-md p-0 md:p-2  hover:border-none transition-all hover:scale-110 '>
+    <div className=' hover:outline bg-blue-300 text-custom-text-dark-primary dark:text-custom-text-header font-semibold  dark:bg-custom-btn-primary-text  md:my-4 hover:outline-custom-text-header w-60 h-90 shadow-sm shadow-lime-100 rounded-md p-2   hover:border-none transition-all hover:scale-110 '>
       <div className="flex flex-col  gap-1 items-center ">
         <Link to={`/detail/${id}`}>
           <div className="w-[200px] h-[250px] overflow-hidden object-center rounded-md">
@@ -14,7 +14,7 @@ const Card = ({ title, poster, id, removeiD, handleAddtoFav, handleDeleteAnime, 
           </div>
         </Link>
         <div className="flex w-full justify-between h-full items-start">
-          <p className='font-thin text-lg text-center w-full  '>{title}</p>
+          <p className=' text-lg text-center w-full   '>{title}</p>
           {!removeiD && <button onClick={() => handleAddtoFav(id)} className={`${favs.findIndex(i => i._id === id) > -1 ? "text-red-600 text-2xl" : "text-white text-xl"}  scale-110  text-center mr-4 mt-2`}><IoIosHeart /></button>}
 
         </div>
