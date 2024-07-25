@@ -7,12 +7,6 @@ import Spinner from '../../utils/Spinner';
 import { toast } from 'react-toastify';
 import { clearAllErrors } from '../../store/anime/animSlice';
 const Dashboard = () => {
-    const data = [
-        { id: 1, name: 'John Doe', email: 'john@example.com', userID: '6767gssgfksaksdj' },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com', userID: '6767gssgfksaksdj' },
-
-        // Add more data as needed
-    ];
     const dispatch = useDispatch();
     const { allUser, error, loading } = useSelector((state) => state.anime)
 

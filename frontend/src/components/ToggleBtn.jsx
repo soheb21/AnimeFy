@@ -14,7 +14,7 @@ const ToggleBtn = () => {
     };
     return (
         <>
-            <label htmlFor={"toggle"} className="flex transition-all  items-center cursor-pointer">
+            <label htmlFor={"toggle"} className="flex h-full my-auto transition-all md:mr-4  items-center cursor-pointer">
                 <div className="relative">
                     <button id={"toggle"} type="checkbox" className="sr-only" onClick={toggleTheme} />
                     <div className="block bg-gray-300 w-10 h-5 rounded-full"></div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import YoutubeTrailer from './YoutubeTrailer';
 import { addFavAsync } from '../store/user/userAPI';
@@ -8,10 +8,16 @@ import { toast } from 'react-toastify';
 const CardDetail = ({ data }) => {
 
     const { id } = useParams();
-    const { favs } = useSelector((state) => state.user)
+    const { favs, isAuthenticate } = useSelector((state) => state.user)
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleAddtoFav = () => {
+        if (!isAuthenticate) {
+            toast.warn("Please Login!!")
+            navigate("/login")
+            return
+        }
         if (favs && favs.findIndex((item) => item._id === id) < 0) {
             dispatch(addFavAsync(id))
             toast.success("Added Successfully")

@@ -1,6 +1,6 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { getFavAsync, getUserAsync } from './store/user/userAPI';
@@ -9,7 +9,7 @@ import ProtectedAdmin from './utils/ProtectedAdmin';
 import AddAnimeForm from './pages/Admin/AddAnimeForm';
 import Dashbaord from './pages/Admin/Dashbaord';
 import { getAllAnimesAsync } from './store/anime/animeAPI';
-import Home from './pages/Home';
+const Home = lazy(() => import('./pages/Home'))
 import Detail from './pages/Detail';
 import ErrorPage from './pages/ErrorPage';
 import Fav from './pages/Fav';
@@ -18,15 +18,17 @@ import Login from './components/Login';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { clearAllUserErrors } from './store/user/userSlice'
+import Spinner from './utils/Spinner'
 
 
 function App() {
 
   const dispatch = useDispatch();
   const { error, message } = useSelector((state) => state.anime)
-  const { isAuthenticate } = useSelector((state) => state.user)
+  const { isAuthenticate, favs } = useSelector((state) => state.user)
   const token = localStorage.getItem("token");
   const [filter, setFilter] = useState("")
+  let listCount = favs.length ? favs.length : 0;
 
   useEffect(() => {
     if (isAuthenticate || token) {
@@ -44,10 +46,16 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
+      <Navbar count={listCount} />
+
       <Routes>
-        <Route path='/' element={<Home setFilter={setFilter} filter={filter} />} />
+        <Route path='/' element={
+          <Suspense fallback={<Spinner />}>
+            <Home setFilter={setFilter} filter={filter} />
+          </Suspense>
+        } />
         <Route path='/detail/:id' element={<Detail />} />
+
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/fav' element={
@@ -58,8 +66,8 @@ function App() {
         <Route path='/dashboard' element={<ProtectedAdmin><Dashbaord /></ProtectedAdmin>} />
         <Route path='/*' element={<ErrorPage />} />
       </Routes>
-      <ToastContainer />
-    </Router>
+      <ToastContainer position='bottom-right' autoClose={1500} />
+    </Router >
 
 
 

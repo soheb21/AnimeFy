@@ -9,6 +9,7 @@ import { deleteAnimeAsync } from '../store/anime/adminAPI'
 import { toast } from 'react-toastify'
 import throttle from 'lodash.throttle';
 import { addFavAsync } from '../store/user/userAPI'
+import { useNavigate } from 'react-router-dom'
 
 const Home = ({ setFilter, filter }) => {
 
@@ -16,7 +17,9 @@ const Home = ({ setFilter, filter }) => {
   const { loading, anime, error } = useSelector((state) => state.anime)
   const favsError = useSelector((state) => state.user.error)
   const message = useSelector((state) => state.user.message)
+  const isAuthenticate = useSelector((state) => state.user.isAuthenticate)
   const [query, setQuery] = useState('');
+  const navigate = useNavigate();
 
   const filteredItems = anime.filter((item) =>
     item.title.toLowerCase().includes(query.toLowerCase())
@@ -28,6 +31,11 @@ const Home = ({ setFilter, filter }) => {
 
   const handleAddtoFav = (id) => {
 
+    if (!isAuthenticate) {
+      toast.warn("Please Login!!")
+      navigate("/login")
+      return
+    }
     if (!favsError) {
       dispatch(addFavAsync(id))
       return;
@@ -55,7 +63,7 @@ const Home = ({ setFilter, filter }) => {
       dispatch(clearAllErrors());
       return;
     }
-  }, [message, favsError, error])
+  }, [message, favsError, isAuthenticate, error])
 
 
   return (
@@ -65,7 +73,7 @@ const Home = ({ setFilter, filter }) => {
           ? (<Spinner />)
           : (
             <div className="bg-hero-pattern h-screen w-full -opacity-40 dark:bg-hero-dark-pattern fixed top-0">
-              <div className='h-full w-full   overflow-auto  md:p-4  text-white'>
+              <div className='h-full w-full pb-4   overflow-auto  md:p-4  text-white'>
                 <Header handleChange={handleChange} query={query} setFilter={setFilter} filter={filter} />
                 <div className="flex flex-wrap gap-3 justify-center items-center " >
                   {

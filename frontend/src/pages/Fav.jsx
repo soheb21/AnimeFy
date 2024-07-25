@@ -28,9 +28,9 @@ const Fav = () => {
             {
                 loading
                     ? <Spinner />
-                    : <div className='bg-hero-pattern h-screen w-full -opacity-40 dark:bg-hero-dark-pattern fixed top-0  '>
+                    : <div className='bg-hero-pattern h-screen w-full -opacity-40 dark:bg-hero-dark-pattern md:fixed top-12   '>
 
-                        <div className="h-full w-full mt-20  overflow-auto  md:p-4  text-white">
+                        <div className="h-full w-full py-4   overflow-auto  md:p-8  text-white">
                             <div className="flex flex-wrap gap-3 justify-center items-center " >
                                 {
                                     favs.length > 0 ? favs?.map((item, ind) => <Card
